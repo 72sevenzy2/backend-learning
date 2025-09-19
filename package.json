@@ -4,9 +4,12 @@
   "description": "node.js learning journey",
   "main": "index.js",
   "scripts": {
-    "dev": "node server"
+    "dev": "nodemon server"
   },
   "type": "module",
   "author": "72",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "nodemon": "^3.1.10"
+  }
 }

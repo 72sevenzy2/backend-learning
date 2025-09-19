@@ -1,0 +1,12 @@
+{
+  "name": "journey",
+  "version": "1.0.0",
+  "description": "node.js learning journey",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node server"
+  },
+  "type": "module",
+  "author": "72",
+  "license": "ISC"
+}

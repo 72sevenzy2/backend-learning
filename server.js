@@ -1,12 +1,21 @@
 import http from "http";
-
-const server = http.createServer((req, res) => {
-    res.writeHead(500, { "content-type": "application/json" });
-    res.end(JSON.stringify({ message: "server error" }));
-})
-
+import dotenv from "dotenv";
+dotenv.config();
 const PORT = process.env.PORT;
 
-server.listen(PORT, () => {
+const server = http.createServer((req, res) => {
+    if (req.url === '/server.htm') {
+        res.writeHead(200, { "content-type": "text/html" });
+        res.end("<h1>test</h1>");
+    } else if (req.url === '/server.htm/about') {
+        res.writeHead(200, { "content-type": "text/html" });
+        res.end("<h1>about</h1>");
+    } else {
+        res.writeHead(404, { "content-type": "text/html" });
+        res.end("<h1>not found</h1>");
+    }
+});
+
+server.listen(PORT, `0.0.0.0`, () => {
     console.log(`server running on port ${PORT}`)
 });

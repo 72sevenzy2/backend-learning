@@ -2,7 +2,7 @@
   "name": "journey",
   "version": "1.0.0",
   "description": "node.js learning journey",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "dev": "nodemon --env-file=.env server"
   },
@@ -10,6 +10,7 @@
   "author": "72",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^17.2.2",
     "nodemon": "^3.1.10"
   }
 }

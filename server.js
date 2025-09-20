@@ -1,7 +1,15 @@
+// importing necessary modules
 import http from "http";
 import dotenv from "dotenv";
+import fs from "fs/promises";
+import url from "url";
+import path from "path";
 dotenv.config();
 const PORT = process.env.PORT;
+
+// loading a file
+const __filename = url.fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const users = [
     { name: "john doe", id: 1 },
@@ -9,28 +17,46 @@ const users = [
     { name: "jane", id: 3 }
 ]
 
-const server = http.createServer((req, res) => {
-    if (req.url === '/api/users' && req.method === 'GET') {
+
+//middleware so proper and maintainability
+const logger = (req, res, next) => {
+    console.log(`${req.method} : ${req.url}`);
+    next();
+}
+
+const usersHandler = (req, res) => {
+    res.setHeader("content-type", "application/json");
+    res.write(JSON.stringify(users)); res.end();
+}
+
+const usersByIdHandler = (req, res) => {
+    const id = req.url.split('/')[3];
+    const user = users.find((user) => user.id === parseInt(id));
+    if (user) {
         res.setHeader("content-type", "application/json");
-        res.write(JSON.stringify(users)); res.end();
-    }
-    else if (req.url.match(/\/api\/users\/([0-9]+)/) && req.method === 'GET') {
-        const id = req.url.split('/')[3];
-        const user = users.find((user) => user.id === parseInt(id));
-        if (user) {
-            res.setHeader("content-type", "application/json");
-            res.write(JSON.stringify(user));
-            res.end();
-        }
-        else {
-            res.writeHead(404, { "content-type": "application/json" });
-            res.end(JSON.stringify({ message: "user not found" }));
-        }
+        res.write(JSON.stringify(user));
+        res.end();
     }
     else {
-        res.writeHead(404, { "content-type": "text/html" });
-        res.end("<h1>not found</h1>");
+        res.writeHead(404, { "content-type": "application/json" });
+        res.end(JSON.stringify({ message: "user not found" }));
     }
+}
+
+// server
+const server = http.createServer((req, res) => {
+    logger(req, res, () => {
+        if (req.url === '/api/users' && req.method === 'GET') {
+            usersHandler(req, res);
+        }
+        else if (req.url.match(/\/api\/users\/([0-9]+)/) && req.method === 'GET') {
+            usersByIdHandler(req, res);
+        }
+        else {
+            res.writeHead(404, { "content-type": "text/html" });
+            res.end("<h1>not found</h1>");
+        }
+    })
 });
 
 server.listen(PORT, `0.0.0.0`, () => {

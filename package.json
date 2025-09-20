@@ -4,7 +4,7 @@
   "description": "node.js learning journey",
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon --env-file=.env server"
+    "dev": "nodemon --env-file=.env"
   },
   "type": "module",
   "author": "72",

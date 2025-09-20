@@ -1,4 +1,4 @@
-// ...existing code...
+// importing necessary modules
 import http from "http";
 import dotenv from "dotenv";
 import fs from "fs/promises";
@@ -24,16 +24,11 @@ const createNewUser = (req, res) => {
         body += chunk.toString();
     });
     req.on('end', () => {
-        try {
-            const newUser = JSON.parse(body);
-            // push only the new user (previous code duplicated the array)
-            users.push(newUser);
-            res.writeHead(201, { "content-type": "application/json" });
-            res.end(JSON.stringify(newUser));
-        } catch (err) {
-            res.writeHead(400, { "content-type": "application/json" });
-            res.end(JSON.stringify({ message: "invalid JSON" }));
-        }
+        const newUser = JSON.parse(body);
+        users.push(...users, newUser);
+        res.statusCode = 201;
+        res.write(JSON.stringify(newUser));
+        res.end();
     })
 }
 
@@ -46,37 +41,18 @@ const logger = (req, res, next) => {
 
 const usersHandler = (req, res) => {
     res.setHeader("content-type", "application/json");
-    res.end(JSON.stringify(users));
+    res.write(JSON.stringify(users)); res.end();
 }
 
 const usersByIdHandler = (req, res) => {
-    // robust id parsing and logging
-    const base = `http://${req.headers.host || 'localhost'}`;
-    let idRaw;
-    try {
-        const parsed = new URL(req.url, base);
-        const segments = parsed.pathname.split('/').filter(Boolean); // ['api','users','1']
-        idRaw = segments.pop();
-    } catch (e) {
-        idRaw = req.url.split('/')[3];
-    }
-
-    const idNum = Number(idRaw);
-    console.log('usersByIdHandler - req.url:', req.url, 'idRaw:', idRaw, 'idNum:', idNum);
-
-    if (!Number.isInteger(idNum)) {
-        res.writeHead(400, { "content-type": "application/json" });
-        res.end(JSON.stringify({ message: "invalid id" }));
-        return;
-    }
-
-    const user = users.find((user) => user.id === idNum);
+    const id = req.url.split('/')[3];
+    const user = users.find((user) => user.id === parseInt(id));
     if (user) {
         res.setHeader("content-type", "application/json");
-        res.end(JSON.stringify(user));
+        res.write(JSON.stringify(user));
+        res.end();
     }
     else {
-        console.log('user not found for id:', idNum);
         res.writeHead(404, { "content-type": "application/json" });
         res.end(JSON.stringify({ message: "user not found" }));
     }
@@ -105,4 +81,3 @@ const server = http.createServer((req, res) => {
 server.listen(PORT, `0.0.0.0`, () => {
     console.log(`server running on port ${PORT}`)
 });
-// ...existing code...

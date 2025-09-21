@@ -2,9 +2,9 @@
   "name": "journey",
   "version": "1.0.0",
   "description": "node.js learning journey",
-  "main": "server.js",
+  "main": "server2.js",
   "scripts": {
-    "dev": "nodemon --env-file=.env"
+    "dev": "node --env-file=.env"
   },
   "type": "module",
   "author": "72",

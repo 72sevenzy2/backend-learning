@@ -2,15 +2,21 @@
   "name": "journey",
   "version": "1.0.0",
   "description": "node.js learning journey",
-  "main": "server2.js",
+  "main": "express.js/app.js",
   "scripts": {
-    "dev": "nodemon --env-file=.env server.js"
+    "start.e": "node --env-file=express.js/.env express.js/app.js",
+    "dev.e": "node --env-file=express.js/.env --watch express.js/app.js",
+    "start-node.e": "nodemon --env-file=express.js/.env express.js/app.js",
+    "start.n": "node --env-file=node.js/.env node.js/server.js",
+    "dev.n": "node --env-file=node.js/.env --watch node.js/server.js",
+    "start-node.n": "nodemon --env-file=node.js/.env node.js/server.js"
   },
   "type": "module",
   "author": "72",
   "license": "ISC",
   "dependencies": {
     "dotenv": "^17.2.2",
+    "express": "^5.1.0",
     "nodemon": "^3.1.10"
   }
 }

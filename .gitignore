@@ -1,2 +1,4 @@
 node_modules
-.env
+node.js/.env
+
+# ignoring env variables aswell as the node modules

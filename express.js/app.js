@@ -16,9 +16,11 @@ const __dirname = path.dirname(__filename);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(logger)
+app.use(logger);
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use("/api/posts", posts);
 app.use(errorHandler);
 
-app.listen(port, () => { console.log(`sever is running on port ${port}`) });
+app.listen(port, '0.0.0.0', () => { console.log(`sever is running on port ${port}`) });
